@@ -9,6 +9,7 @@ public class ItemCollector : MonoBehaviour
 
     [SerializeField] private Text cherriesText;
     private Animator anim;
+    private BoxCollider2D cherryCollider;
 
     [SerializeField] private AudioSource collectionSoundEffect;
     
@@ -18,6 +19,8 @@ public class ItemCollector : MonoBehaviour
         {   
             collectionSoundEffect.Play();
             anim = collision.gameObject.GetComponent<Animator>();
+            cherryCollider = collision.gameObject.GetComponent<BoxCollider2D>();
+            cherryCollider.enabled = false;
             anim.SetTrigger("collected");
             cherries++;
             cherriesText.text = "Cherries: " + cherries;

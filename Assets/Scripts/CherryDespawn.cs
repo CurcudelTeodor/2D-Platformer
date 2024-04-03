@@ -6,6 +6,7 @@ public class CherryDespawn : MonoBehaviour
 {   
     void DespawnCherry()
     {
+        Debug.Log("Im here");
         Destroy(gameObject);
     }
 }
