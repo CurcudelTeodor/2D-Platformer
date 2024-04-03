@@ -9,11 +9,14 @@ public class ItemCollector : MonoBehaviour
 
     [SerializeField] private Text cherriesText;
     private Animator anim;
+
+    [SerializeField] private AudioSource collectionSoundEffect;
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Cherry"))
         {   
+            collectionSoundEffect.Play();
             anim = collision.gameObject.GetComponent<Animator>();
             anim.SetTrigger("collected");
             cherries++;
