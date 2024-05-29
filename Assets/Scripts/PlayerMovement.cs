@@ -11,10 +11,13 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D boxCollider;
     [SerializeField] private LayerMask jumpableGround;
 
+    private int jumpCount = 0;
+    private const int maxJumpCount = 1;
 
     private float directionX = 0f;
 
     [SerializeField] private float moveSpeed = 7f;
+    [SerializeField] private float sprintSpeed = 10f;
     [SerializeField] private float jumpForce = 14f;
 
     private enum AnimationState { idle, running, jumping, falling }
@@ -34,12 +37,32 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         directionX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(directionX * moveSpeed, rb.velocity.y);
+           
+        // sprinting
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            rb.velocity = new Vector2(directionX * sprintSpeed, rb.velocity.y);
+            anim.speed = 1.5f;
+            jumpForce = 16f;
+        }
+        else
+        {
+            rb.velocity = new Vector2(directionX * moveSpeed, rb.velocity.y);
+            anim.speed = 1.0f;
+            jumpForce = 14f;
+        }
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+
+        if (Input.GetButtonDown("Jump") && (IsGrounded() || jumpCount < maxJumpCount))
         {   
             jumpSoundEffect.Play();
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            jumpCount++;
+        }
+
+        if (IsGrounded())
+        {
+            jumpCount = 0;
         }
 
         UpdateAnimationState();
